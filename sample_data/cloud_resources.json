@@ -1,0 +1,57 @@
+{
+  "aws_s3_bucket": {
+    "public_bucket": {
+      "bucket": "my-public-bucket",
+      "acl": "public-read",
+      "region": "us-east-1"
+    },
+    "secure_bucket": {
+      "bucket": "my-secure-bucket",
+      "acl": "private",
+      "region": "us-east-1",
+      "block_public_acls": true,
+      "block_public_policy": true,
+      "ignore_public_acls": true,
+      "restrict_public_buckets": true
+    }
+  },
+  "aws_security_group": {
+    "open_sg": {
+      "name": "open-security-group",
+      "description": "Security group with open SSH",
+      "ingress": [
+        {
+          "from_port": 22,
+          "to_port": 22,
+          "protocol": "tcp",
+          "cidr_blocks": ["0.0.0.0/0"],
+          "description": "Open SSH to world"
+        },
+        {
+          "from_port": 80,
+          "to_port": 80,
+          "protocol": "tcp",
+          "cidr_blocks": ["0.0.0.0/0"],
+          "description": "HTTP access"
+        }
+      ],
+      "egress": [
+        {
+          "from_port": 0,
+          "to_port": 0,
+          "protocol": "-1",
+          "cidr_blocks": ["0.0.0.0/0"],
+          "description": "All outbound traffic"
+        }
+      ]
+    }
+  },
+  "aws_instance": {
+    "web_server": {
+      "ami": "ami-0c55b159cbfafe1f0",
+      "instance_type": "t2.micro",
+      "security_groups": ["open_sg"],
+      "user_data": "#!/bin/bash\necho 'Hello World' > /var/www/html/index.html"
+    }
+  }
+}

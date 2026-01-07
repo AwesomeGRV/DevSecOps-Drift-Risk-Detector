@@ -1,0 +1,38 @@
+{
+  "commits": [
+    {
+      "hash": "abc123def456",
+      "author": {
+        "name": "Awesome GRV",
+        "email": "awesome.grv@awesome.com"
+      },
+      "date": "2024-01-07T10:00:00Z",
+      "message": "Update security group rules for production deployment",
+      "files": [
+        {
+          "filename": "security_groups.tf",
+          "changes": "+ Modified SSH access rules"
+        },
+        {
+          "filename": "main.tf",
+          "changes": "+ Updated instance configuration"
+        }
+      ]
+    },
+    {
+      "hash": "def456ghi789",
+      "author": {
+        "name": "GRV Awesome",
+        "email": "awesome.grv@awesome.com"
+      },
+      "date": "2024-01-07T09:30:00Z",
+      "message": "Add new S3 bucket for static assets",
+      "files": [
+        {
+          "filename": "s3_buckets.tf",
+          "changes": "+ Added public bucket configuration"
+        }
+      ]
+    }
+  ]
+}

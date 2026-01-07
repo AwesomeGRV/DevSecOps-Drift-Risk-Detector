@@ -1,0 +1,31 @@
+{
+  "aws": {
+    "s3": {
+      "block_public_access": true,
+      "encryption_at_rest": true,
+      "versioning": true,
+      "access_logging": true
+    },
+    "security_group": {
+      "security_group_rules": {
+        "no_open_ssh_to_world": true,
+        "no_open_rdp_to_world": true,
+        "no_open_database_to_world": true
+      }
+    }
+  },
+  "custom_rules": [
+    {
+      "name": "no_public_s3_buckets",
+      "description": "S3 buckets should not be publicly accessible",
+      "resource_types": ["aws_s3_bucket"],
+      "condition": "acl != 'public-read' and acl != 'public-write'"
+    },
+    {
+      "name": "restricted_ssh_access",
+      "description": "SSH access should be restricted to internal networks",
+      "resource_types": ["aws_security_group"],
+      "condition": "ingress[?from_port==`22`].cidr_blocks != [`0.0.0.0/0`]"
+    }
+  ]
+}
