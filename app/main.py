@@ -81,8 +81,11 @@ async def analyze_drift(
         )
         
         # Generate comprehensive report
+        summary = f"Drift detected: {drift_results.drift_detected}, Risk level: {security_results.risk_level}, Resources affected: {len(drift_results.affected_resources)}"
+        
         report = DriftReport(
             timestamp=datetime.now(),
+            summary=summary,
             drift_detected=drift_results.drift_detected,
             risk_level=security_results.risk_level,
             affected_resources=drift_results.affected_resources,
@@ -95,9 +98,20 @@ async def analyze_drift(
             preventive_controls=security_results.preventive_controls
         )
         
-        return JSONResponse(content=report.dict())
+        # Convert to JSON-serializable dict manually
+        report_data = report.model_dump()
+        if report_data.get('when_it_changed'):
+            report_data['when_it_changed'] = report_data['when_it_changed'].isoformat()
+        if report_data.get('timestamp'):
+            report_data['timestamp'] = report_data['timestamp'].isoformat()
+        
+        return JSONResponse(content=report_data)
         
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Analysis failed with error: {str(e)}")
+        print(f"Full traceback: {error_details}")
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
 @app.get("/health")

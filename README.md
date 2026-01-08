@@ -2,7 +2,7 @@
 
 A production-ready application to detect, analyze, and explain configuration drift and security risks between Infrastructure-as-Code and live cloud resources.
 
-## 🚀 Features
+##  Features
 
 ### Core Capabilities
 - **Configuration Drift Detection**: Compare Terraform IaC with deployed infrastructure
@@ -25,7 +25,7 @@ A production-ready application to detect, analyze, and explain configuration dri
 - **Comprehensive Reports**: Detailed findings with actionable recommendations
 - **Export Functionality**: Download reports for documentation
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
@@ -49,7 +49,7 @@ A production-ready application to detect, analyze, and explain configuration dri
 - **Terraform Generator**: Automated remediation code generation
 - **Web Dashboard**: Modern React-like interface with Tailwind CSS
 
-## 📦 Installation
+##  Installation
 
 ### Prerequisites
 - Python 3.8+
@@ -87,7 +87,7 @@ docker build -t drift-detector .
 docker run -p 8000:8000 drift-detector
 ```
 
-## 📊 Usage
+##  Usage
 
 ### Input Requirements
 
@@ -140,7 +140,7 @@ The analysis produces a structured report with:
 - **Terraform Remediation**: Generated IaC code
 - **Preventive Controls**: Policy recommendations
 
-## 🔧 Configuration
+##  Configuration
 
 ### Environment Variables
 
@@ -184,7 +184,7 @@ Create a `security_rules.json` file to define custom security policies:
 }
 ```
 
-## 🧪 Testing
+##  Testing
 
 ### Unit Tests
 
@@ -209,7 +209,7 @@ python -m pytest tests/integration/
 python -m pytest tests/api/
 ```
 
-## 📈 Performance
+##  Performance
 
 ### Benchmarks
 - **Analysis Speed**: < 5 seconds for typical enterprise environments
@@ -223,7 +223,7 @@ python -m pytest tests/api/
 - Filter activity logs to relevant time ranges
 - Cache security rules for repeated analyses
 
-## 🔒 Security Considerations
+##  Security Considerations
 
 ### Data Privacy
 - No data is stored permanently on the server
@@ -237,7 +237,7 @@ python -m pytest tests/api/
 - Validate all uploaded file types and sizes
 - Rate limit API endpoints
 
-## 🚀 Production Deployment
+##  Production Deployment
 
 ### Docker Compose
 
@@ -283,7 +283,7 @@ spec:
           value: "8000"
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -308,11 +308,11 @@ black core/ app/
 mypy core/ app/
 ```
 
-## 📝 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+##  Support
 
 ### Troubleshooting
 
@@ -340,7 +340,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Review sample input/output formats
 - Join our community discussions
 
-## 🗺️ Roadmap
+##  Roadmap
 
 ### Upcoming Features
 - [ ] Real-time cloud monitoring integration

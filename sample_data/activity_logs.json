@@ -9,7 +9,7 @@
         "type": "IAMUser",
         "principalId": "AIDACKCEVSQ6C2EXAMPLE",
         "arn": "arn:aws:iam::123456789012:user/john.doe",
-        "userName": "john.doe"
+        "userName": "awesome.grv"
       },
       "requestParameters": {
         "groupId": "sg-12345678",
@@ -32,7 +32,7 @@
         "type": "IAMUser",
         "principalId": "AIDACKCEVSQ6C2EXAMPLE",
         "arn": "arn:aws:iam::123456789012:user/jane.smith",
-        "userName": "jane.smith"
+        "userName": "grv.awesome"
       },
       "requestParameters": {
         "bucketName": "my-public-bucket",
