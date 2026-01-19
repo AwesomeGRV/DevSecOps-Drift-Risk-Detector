@@ -23,7 +23,7 @@
       "hash": "def456ghi789",
       "author": {
         "name": "GRV Awesome",
-        "email": "awesome.grv@awesome.com"
+        "email": "grv.awesome@awesome.com"
       },
       "date": "2024-01-07T09:30:00Z",
       "message": "Add new S3 bucket for static assets",

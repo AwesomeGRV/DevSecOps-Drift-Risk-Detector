@@ -53,22 +53,30 @@ class SecurityAnalyzer:
         )
     
     def _load_default_security_rules(self) -> Dict[str, Any]:
-        """Load default security rules based on CIS benchmarks"""
+        """Load enhanced security rules based on CIS benchmarks and industry standards"""
         return {
             'aws': {
                 's3': {
                     'block_public_access': True,
                     'encryption_at_rest': True,
                     'versioning': True,
-                    'access_logging': True
+                    'access_logging': True,
+                    'require_ssl': True,
+                    'lifecycle_policy': True,
+                    'cross_region_replication': False  # Should be explicitly configured
                 },
                 'ec2': {
                     'security_group_rules': {
                         'no_open_ssh_to_world': True,
                         'no_open_rdp_to_world': True,
-                        'no_open_database_to_world': True
+                        'no_open_database_to_world': True,
+                        'no_open_admin_ports': True,
+                        'restrict_inbound_traffic': True
                     },
-                    'iam_instance_profile': 'avoid_root_usage'
+                    'iam_instance_profile': 'avoid_root_usage',
+                    'ebs_encryption': True,
+                    'monitoring_enabled': True,
+                    'detailed_monitoring': True
                 },
                 'iam': {
                     'no_root_access_keys': True,
@@ -77,14 +85,29 @@ class SecurityAnalyzer:
                     'password_policy': {
                         'min_length': 12,
                         'require_symbols': True,
-                        'require_numbers': True
-                    }
+                        'require_numbers': True,
+                        'require_uppercase': True,
+                        'require_lowercase': True,
+                        'password_reuse_prevention': 5
+                    },
+                    'access_key_rotation': 90,
+                    'console_access_mfa': True
                 },
                 'rds': {
                     'encryption_at_rest': True,
                     'encryption_in_transit': True,
                     'public_accessibility': False,
-                    'backup_retention': {'min_days': 7}
+                    'backup_retention': {'min_days': 7},
+                    'multi_az': True,
+                    'deletion_protection': True,
+                    'minor_version_upgrade': True
+                },
+                'vpc': {
+                    'flow_logs_enabled': True,
+                    'no_default_security_group': True,
+                    'private_subnets': True,
+                    'nat_gateway': True,
+                    'vpn_or_direct_connect': True
                 }
             },
             'azure': {
