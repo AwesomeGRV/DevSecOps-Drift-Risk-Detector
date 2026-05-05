@@ -34,14 +34,44 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-sm">Production Ready v1.0</span>
-                    <button class="glass-effect px-4 py-2 rounded-lg hover:bg-white/20 transition">
-                        <i data-lucide="settings" class="w-5 h-5"></i>
-                    </button>
+                    <span class="text-sm bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-xs font-semibold">Production Ready v3.0</span>
+                    <div class="flex items-center space-x-2">
+                        <button id="themeToggle" class="glass-effect px-3 py-2 rounded-lg hover:bg-white/20 transition" title="Toggle Theme">
+                            <i data-lucide="moon" class="w-5 h-5"></i>
+                        </button>
+                        <button id="settingsBtn" class="glass-effect px-3 py-2 rounded-lg hover:bg-white/20 transition" title="Settings">
+                            <i data-lucide="settings" class="w-5 h-5"></i>
+                        </button>
+                        <button id="notificationsBtn" class="glass-effect px-3 py-2 rounded-lg hover:bg-white/20 transition relative" title="Notifications">
+                            <i data-lucide="bell" class="w-5 h-5"></i>
+                            <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- Status Bar -->
+    <div class="bg-white border-b border-gray-200 px-4 py-2">
+        <div class="container mx-auto flex items-center justify-between text-sm">
+            <div class="flex items-center space-x-4">
+                <span class="flex items-center space-x-1">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-gray-600">System Healthy</span>
+                </span>
+                <span class="text-gray-400">|</span>
+                <span class="text-gray-600">CPU: <span id="cpuUsage">12%</span></span>
+                <span class="text-gray-400">|</span>
+                <span class="text-gray-600">Memory: <span id="memoryUsage">45%</span></span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-600">Last Scan: <span id="lastScan">Never</span></span>
+                <span class="text-gray-400">|</span>
+                <span class="text-gray-600">Active Users: <span id="activeUsers">1</span></span>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
@@ -53,6 +83,16 @@
             </div>
             
             <form id="uploadForm" class="space-y-6">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start space-x-2">
+                        <i data-lucide="info" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                        <div class="text-sm text-blue-800">
+                            <p class="font-semibold mb-1">Enhanced Security Analysis</p>
+                            <p>Upload your cloud configurations for comprehensive drift detection and security vulnerability assessment with AI-powered insights.</p>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Required Field -->
                     <div class="space-y-2">
@@ -123,11 +163,16 @@
                     </div>
                 </div>
 
-                <div class="flex justify-center">
+                <div class="flex justify-center space-x-4">
                     <button type="submit" id="analyzeBtn"
-                            class="gradient-bg text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center space-x-2">
+                            class="gradient-bg text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center space-x-2 shadow-lg">
                         <i data-lucide="search" class="w-5 h-5"></i>
                         <span>Analyze Drift & Security</span>
+                    </button>
+                    <button type="button" id="validateBtn"
+                            class="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition flex items-center space-x-2">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                        <span>Validate Files</span>
                     </button>
                 </div>
             </form>
@@ -386,11 +431,135 @@
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
+        // Modern JavaScript functionality
+        let authToken = localStorage.getItem('authToken') || null;
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Initialize theme
+        function initializeTheme() {
+            if (currentTheme === 'dark') {
+                document.body.classList.add('dark');
+                document.getElementById('themeToggle').innerHTML = '<i data-lucide="sun" class="w-5 h-5"></i>';
+            }
+            lucide.createIcons();
+        }
+        
+        // Theme toggle
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+            document.body.classList.toggle('dark');
+            const icon = currentTheme === 'dark' ? 'sun' : 'moon';
+            document.getElementById('themeToggle').innerHTML = `<i data-lucide="${icon}" class="w-5 h-5"></i>`;
+            lucide.createIcons();
+        });
+        
+        // System monitoring
+        async function updateSystemStatus() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                
+                document.getElementById('cpuUsage').textContent = `${data.system.cpu_percent}%`;
+                document.getElementById('memoryUsage').textContent = `${data.system.memory_percent}%`;
+                document.getElementById('activeUsers').textContent = '1'; // Would come from API
+                
+                // Update system status indicator
+                const statusIndicator = document.querySelector('.animate-pulse');
+                if (data.status === 'healthy') {
+                    statusIndicator.className = 'w-2 h-2 bg-green-500 rounded-full animate-pulse';
+                    statusIndicator.nextElementSibling.textContent = 'System Healthy';
+                } else {
+                    statusIndicator.className = 'w-2 h-2 bg-red-500 rounded-full';
+                    statusIndicator.nextElementSibling.textContent = 'System Unhealthy';
+                }
+            } catch (error) {
+                console.error('Failed to fetch system status:', error);
+            }
+        }
+        
+        // Update system status every 10 seconds
+        setInterval(updateSystemStatus, 10000);
+        updateSystemStatus(); // Initial call
+        // Enhanced file validation
+        document.getElementById('validateBtn').addEventListener('click', async () => {
+            const formData = new FormData(document.getElementById('uploadForm'));
+            
+            // Check if required file is present
+            if (!formData.get('cloud_config') || formData.get('cloud_config').name === '') {
+                showNotification('Please upload a cloud configuration file', 'error');
+                return;
+            }
+            
+            // Validate file sizes
+            for (let [key, value] of formData.entries()) {
+                if (value instanceof File && value.size > 100 * 1024 * 1024) { // 100MB limit
+                    showNotification(`File ${value.name} exceeds 100MB limit`, 'error');
+                    return;
+                }
+            }
+            
+            showNotification('Files validated successfully', 'success');
+        });
+        
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500';
+            
+            notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="${type === 'error' ? 'alert-circle' : type === 'success' ? 'check-circle' : 'info'}" class="w-5 h-5"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            lucide.createIcons();
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+        
+        // Settings modal
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            showNotification('Settings panel coming soon', 'info');
+        });
+        
+        // Notifications panel
+        document.getElementById('notificationsBtn').addEventListener('click', () => {
+            showNotification('Notifications panel coming soon', 'info');
+        });
+        
         // Download report functionality
         document.getElementById('downloadReport').addEventListener('click', () => {
-            // This would download the current report as JSON
-            console.log('Download report clicked');
+            if (currentAnalysisResult) {
+                const blob = new Blob([JSON.stringify(currentAnalysisResult, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `drift-analysis-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showNotification('Report downloaded successfully', 'success');
+            } else {
+                showNotification('No analysis result available to download', 'error');
+            }
         });
+        
+        // Initialize theme on load
+        initializeTheme();
     </script>
 </body>
 </html>
